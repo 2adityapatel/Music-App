@@ -8,15 +8,8 @@ const Login = () => {
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
-    const [role,setRole] = useState('USER')
-    
-    useEffect(() => {
+    // const [role,setRole] = useState('USER')
 
-        {
-            role == 'ARTIST' ?  navigate('/artist') : navigate('/user');
-        }
-       
-    }, [role, navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -30,9 +23,15 @@ const Login = () => {
             if (response.data.token) {
                 console.log(response.data.msg);
                 localStorage.setItem('token', response.data.token);
-                console.log(response.data.role);
-                setRole(response.data.role)
-               
+                const userRole = response.data.role; 
+                // setRole(userRole)
+                // console.log("Role : " +role);
+                if(userRole === 'USER'){
+                    navigate('/user')
+                }else{
+                    navigate('/artist')
+                }
+            
                 
             }
         } catch (err) {
@@ -40,6 +39,8 @@ const Login = () => {
             setError('Invalid credentials. Please try again.');
             setShowModal(true);
         }
+
+       
     };
 
     return (
