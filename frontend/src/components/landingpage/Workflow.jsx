@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import codeImg from "D:/myprojects/sem4-music/frontend/src/assets/code.jpeg";
+import codeImg from "../../assets/code.jpeg";
 import { checklistItems } from "../../constants";
 
 const Workflow = () => {
