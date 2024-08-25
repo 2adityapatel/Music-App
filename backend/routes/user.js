@@ -8,4 +8,6 @@ router.get('/', (req,res) => {
     res.json({ message: 'Welcome to the user page!', user: req.user })
 })
 
+
+
 module.exports = router
