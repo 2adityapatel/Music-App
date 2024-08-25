@@ -38,7 +38,7 @@ const UserSidebar = () => {
           Home
         </NavLink>
         <NavLink
-          to="/profile"
+          to="/user/profile"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >

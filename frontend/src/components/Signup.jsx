@@ -5,7 +5,7 @@ import { useNavigate , useLocation } from 'react-router-dom';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [fullName, setFullName] = useState('');
+    // const [fullName, setFullName] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -18,11 +18,9 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
 
-       
-        console.log(fullName + " " + email + " " + password + " " + role);
+    
         try {
             const response = await axios.post('http://localhost:8000/signup', {
-                fullName,
                 email,
                 password,
                 role
@@ -56,7 +54,7 @@ const Signup = () => {
             <div className="bg-gray-800 p-10 rounded-lg shadow-2xl w-full max-w-lg transform transition-transform hover:scale-105">
                 <h2 className="text-2xl font-medium text-white mb-8 text-center">Create Your Account</h2>
                 <form onSubmit={handleSignup}>
-                    <div className="mb-6">
+                    {/* <div className="mb-6">
                         <label className="block text-orange-500 font-semibold mb-2">Name</label>
                         <input
                             type="text"
@@ -66,7 +64,7 @@ const Signup = () => {
                             className="w-full px-4 py-3 bg-gray-700 text-white rounded focus:outline-none focus:ring focus:ring-orange-500 placeholder-gray-400 transition-all duration-300"
                             placeholder="Enter your name"
                         />
-                    </div>
+                    </div> */}
                     <div className="mb-6">
                         <label className="block text-orange-500 font-semibold mb-2">Email</label>
                         <input

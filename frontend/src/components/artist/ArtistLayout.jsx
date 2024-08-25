@@ -8,7 +8,7 @@ const artistContext = createContext();
 function ArtistLayout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [artistData, setArtistData] = useState({});
-  const [artistName, setArtistName] = useState("");
+  const [artistName, setArtistName] = useState("Artist");
 
   return (
     <artistContext.Provider value={{ artistName, setArtistName, setArtistData }}>

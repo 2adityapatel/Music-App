@@ -20,7 +20,7 @@ const UserPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setName(response.data.user.fullName);
+        // setName(response.data.user.fullName);
         setUserData(response.data);
 
         // Fetch additional data (replace with actual API calls)

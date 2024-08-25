@@ -17,7 +17,7 @@ const ArtistPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setArtistName(response.data.user.fullName);
+        // setArtistName(response.data.user.fullName);
         setArtistData(response.data);
        
       } catch (error) {

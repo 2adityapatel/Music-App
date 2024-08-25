@@ -21,11 +21,11 @@ router.get("/logout", (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-  const { fullName, email, password ,role} = req.body;
+  // const { fullName, email, password ,role} = req.body;
+  const {  email, password ,role} = req.body;
   console.log(req.email );
   try {
     const user = await User.create({
-      fullName,
       email,
       password,
       role
