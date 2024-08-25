@@ -12,6 +12,7 @@ import LandingPage from "./components/LandingPage";
 import ArtistLayout from "./components/artist/ArtistLayout";
 import UserLayout from "./components/User/UserLayout";
 import ArtistPage from "./components/artist/ArtistPage";
+import UserProfile from "./components/User/UserProfile";
 
 
 function App() {
@@ -29,6 +30,11 @@ function App() {
             <Route path="" element={
               <ProtectedRoute requiredRole="USER">
                 <UserPage/>
+              </ProtectedRoute>
+              }/>
+              <Route path="profile" element={
+              <ProtectedRoute requiredRole="USER">
+                <UserProfile/>
               </ProtectedRoute>
               }/>
           </Route>

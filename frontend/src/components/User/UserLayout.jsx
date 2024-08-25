@@ -8,7 +8,7 @@ const userContext = createContext();
 function UserLayout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [name, setName] = useState("");
+  const [name, setName] = useState("Username");
 
   return (
     <userContext.Provider value={{ name, setName, setUserData }}>
