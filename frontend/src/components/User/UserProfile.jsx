@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { FaUser, FaUserFriends, FaEdit } from 'react-icons/fa';
+import { userContext } from './UserLayout';
 
 const UserProfile = () => {
-  const [profileData, setProfileData] = useState({
-    username: '',
-    profilePhoto: 'https://example.com/default-profile.jpg',
-    numFollowings: 0
-  });
+  const [profileData, setProfileData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [newPhoto, setNewPhoto] = useState(null);
+  const {setName} = useContext(userContext)
 
+  
+  const fetchProfileData = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get('http://localhost:8000/user/profile', {
+          headers : {
+              Authorization : `Bearer ${token}`
+          }
+      });
+      setProfileData(response.data);
+      setNewUsername(response.data.username);
+      setName(response.data.username);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/user/profile');
-        setProfileData(response.data);
-        setNewUsername(response.data.username);
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-      }
-    };
 
     fetchProfileData();
   }, []);
@@ -33,21 +39,31 @@ const UserProfile = () => {
   const handleCancel = () => {
     setIsEditing(false);
     setNewUsername(profileData.username);
+    setName(profileData.username)
     setNewPhoto(null);
   };
 
   const handleSave = async () => {
+
     try {
+        const token = localStorage.getItem('token')
       const updatedProfile = {
         username: newUsername,
         profilePhoto: newPhoto ? await convertToBase64(newPhoto) : profileData.profilePhoto,
-        numFollowings: profileData.numFollowings
+        numberOfArtistsFollowed: profileData.numberOfArtistsFollowed
       };
 
-      const response = await axios.post('http://localhost:8000/user/profile', updatedProfile);
+      const response = await axios.post('http://localhost:8000/user/profile', updatedProfile,{
+        headers : {
+            Authorization : `Bearer ${token}`,
+            
+        }
+      });
 
       setProfileData(response.data);
+      setName(response.data.username)
       setIsEditing(false);
+      fetchProfileData()
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -69,7 +85,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="bg-neutral-700 p-6 rounded-lg border-t-4 border-orange-600">
+    <div className="bg-neutral-700 p-6 m-6 rounded-lg border-t-4 border-orange-600">
       <h2 className="text-xl font-semibold mb-4 flex items-center">
         <FaUser className="mr-2 text-orange-600" />
         User Profile

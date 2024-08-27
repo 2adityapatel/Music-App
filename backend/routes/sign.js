@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const User = require("../models/user");
+const UserProfile = require("../models/userprofile")
 
 const router = Router();
 
@@ -30,10 +31,15 @@ router.post("/signup", async (req, res) => {
       password,
       role
     });
+    const userProfile = await UserProfile.create({
+      email,
+      username:"",
+      profilePhoto:"Hello",
+    })
     console.log(user);
     return res.status(201).send({ msg: "User created successfully", user });
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message + "hiii");
     return res.status(500).send({ msg: "Error creating user", error: error.message });
   }
 });
