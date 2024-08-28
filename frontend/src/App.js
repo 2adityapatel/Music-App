@@ -13,6 +13,7 @@ import ArtistLayout from "./components/artist/ArtistLayout";
 import UserLayout from "./components/User/UserLayout";
 import ArtistPage from "./components/artist/ArtistPage";
 import UserProfile from "./components/User/UserProfile";
+import ArtistProfile from "./components/artist/ArtistProfile";
 
 
 function App() {
@@ -42,6 +43,11 @@ function App() {
             <Route path="" element={
               <ProtectedRoute requiredRole="ARTIST">
                 <ArtistPage/>
+              </ProtectedRoute>
+              }/>
+              <Route path="profile" element={
+              <ProtectedRoute requiredRole="ARTIST">
+                <ArtistProfile/>
               </ProtectedRoute>
               }/>
           </Route>
