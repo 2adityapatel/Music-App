@@ -4,42 +4,21 @@ import { FaUser, FaUserFriends, FaEdit } from 'react-icons/fa';
 import { userContext } from './UserLayout';
 
 const UserProfile = () => {
-  const [profileData, setProfileData] = useState({});
+  
   const [isEditing, setIsEditing] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [newPhoto, setNewPhoto] = useState(null);
-  const {setName} = useContext(userContext)
+  const {user , setUser} = useContext(userContext)
 
   
-  const fetchProfileData = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:8000/user/profile', {
-          headers : {
-              Authorization : `Bearer ${token}`
-          }
-      });
-      setProfileData(response.data);
-      setNewUsername(response.data.username);
-      setName(response.data.username);
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
-    }
-  };
-  
-  useEffect(() => {
-
-    fetchProfileData();
-  }, []);
-
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setNewUsername(profileData.username);
-    setName(profileData.username)
+    setNewUsername(user.username);
+    
     setNewPhoto(null);
   };
 
@@ -49,8 +28,8 @@ const UserProfile = () => {
         const token = localStorage.getItem('token')
       const updatedProfile = {
         username: newUsername,
-        profilePhoto: newPhoto ? await convertToBase64(newPhoto) : profileData.profilePhoto,
-        numberOfArtistsFollowed: profileData.numberOfArtistsFollowed
+        profilePhoto: newPhoto ? await convertToBase64(newPhoto) : user.profilePhoto,
+        numberOfArtistsFollowed: user.numberOfArtistsFollowed
       };
 
       const response = await axios.post('http://localhost:8000/user/profile', updatedProfile,{
@@ -60,10 +39,10 @@ const UserProfile = () => {
         }
       });
 
-      setProfileData(response.data);
-      setName(response.data.username)
+      setUser(response.data);
+    
       setIsEditing(false);
-      fetchProfileData()
+    
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -93,7 +72,7 @@ const UserProfile = () => {
       <div className="flex flex-col items-center">
         <div className="relative mb-4">
           <img
-            src={isEditing && newPhoto ? URL.createObjectURL(newPhoto) : profileData.profilePhoto}
+            src={isEditing && newPhoto ? URL.createObjectURL(newPhoto) : user.profilePhoto}
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover"
           />
@@ -118,11 +97,11 @@ const UserProfile = () => {
             className="bg-neutral-600 text-white px-3 py-2 rounded mb-2"
           />
         ) : (
-          <h3 className="text-2xl font-bold mb-2">{profileData.username}</h3>
+          <h3 className="text-2xl font-bold mb-2">{user.username}</h3>
         )}
         <div className="flex items-center mb-4">
           <FaUserFriends className="mr-2 text-orange-600" />
-          <span>{profileData.numFollowings} Following</span>
+          <span>{user.numFollowings} Following</span>
         </div>
         {isEditing ? (
           <div>
@@ -153,3 +132,4 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+

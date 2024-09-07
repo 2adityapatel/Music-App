@@ -4,37 +4,28 @@ import { FaInstagram, FaTwitter, FaFacebook, FaEdit, FaSave, FaTimes } from 'rea
 import { artistContext } from './ArtistLayout';
 
 const ArtistProfile = () => {
-  const { artistName, setArtistName } = useContext(artistContext);
-  const [artist, setArtist] = useState({
-    username: '',
-    profilePhoto: '',
-    followers: 0,
-    genre: '',
-    bio: '',
-    instagram: '',
-    twitter: '',
-    facebook: ''
-  });
+  const { artist, setArtist } = useContext(artistContext);
   const [isEditing, setIsEditing] = useState(false);
   const [newPhoto, setNewPhoto] = useState(null);
   const [error, setError] = useState(null);
 
-//   useEffect(() => {
-//     fetchArtistData();
-//   }, []);
+  // useEffect(() => {
+  //   fetchArtistData();
+  // }, []);
 
-  const fetchArtistData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/artist/profile', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setArtist(response.data);
-      setArtistName(response.data.username);
-    } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred while fetching artist data');
-    }
-  };
+  // const fetchArtistData = async () => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const response = await axios.get('http://localhost:8000/artist/', {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     console.log("Initial UseEffect :");
+  //     console.log( response.data);
+  //     setArtistData(response.data);
+  //   } catch (error) {
+  //     setError(error.response?.data?.message || 'An error occurred while fetching artist data');
+  //   }
+  // };
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => {
@@ -46,19 +37,53 @@ const ArtistProfile = () => {
     try {
       const token = localStorage.getItem('token');
       const formData = new FormData();
-      Object.keys(artist).forEach(key => formData.append(key, artist[key]));
-      if (newPhoto) formData.append('profilePhoto', newPhoto);
+    //   Object.keys(artist).forEach(key => formData.append(key, artist[key]));
 
-      const response = await axios.post('http://localhost:8000/artist/profile', formData, {
+    // formData.append('username', artist.username);
+    // formData.append('followers', artist.followers);
+    // formData.append('genre', artist.genre);
+    // formData.append('bio', artist.bio);
+    // formData.append('instagram', artist.instagram);
+    // formData.append('twitter', artist.twitter);
+    // formData.append('facebook', artist.facebook);
+
+    // Populate FormData with artist information
+    Object.keys(artist).forEach(key => {
+        if (key !== 'profilePhoto') {  // Skiping profilePhoto as it's handled separately
+          formData.append(key, artist[key]);
+        }
+      });
+
+      // Add new photo if it exists
+      if (newPhoto) {
+        formData.append('profilePhoto', newPhoto);
+      }else{
+        formData.append('profilePhoto',"if not photo !!")
+      }
+
+      console.log(formData.entries());
+      console.log('FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+    console.log( "form : ");
+    console.log( formData);
+    console.log("artist : ");
+    console.log(artist);
+    const response = await axios.post('http://localhost:8000/artist/profile', artist, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+          //  'Content-Type': 'multipart/form-data'
+         'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
       setArtist(response.data);
-      setArtistName(response.data.username);
+      console.log("Set Artist Response data after save : \n");
+      console.log(response.data);
       setIsEditing(false);
-      setNewPhoto(null);
+      // setNewPhoto(null);
+      // fetchArtistData()
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred while updating artist profile');
     }
@@ -66,6 +91,8 @@ const ArtistProfile = () => {
 
   const handleChange = (e) => {
     setArtist({ ...artist, [e.target.name]: e.target.value });
+    console.log("Change : \n");
+    console.log(artist);
   };
 
   const handlePhotoChange = (e) => {
@@ -158,12 +185,9 @@ const ArtistProfile = () => {
             )}
           </div>
           
-          <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8"> {/* Increased bottom margin */}
+          <div className="flex justify-center space-x-6 mb-8">
             {['instagram', 'twitter', 'facebook'].map((social) => (
-              <div key={social} className="flex items-center justify-center">
-                {social === 'instagram' && <FaInstagram className="text-xl md:text-2xl mr-2" />}
-                {social === 'twitter' && <FaTwitter className="text-xl md:text-2xl mr-2" />}
-                {social === 'facebook' && <FaFacebook className="text-xl md:text-2xl mr-2" />}
+              <div key={social} className="text-center">
                 {isEditing ? (
                   <div className="flex flex-col items-center">
                     <label htmlFor={social} className="text-sm text-gray-300 mb-1">{social.charAt(0).toUpperCase() + social.slice(1)}</label>
@@ -173,12 +197,14 @@ const ArtistProfile = () => {
                       name={social}
                       value={artist[social]}
                       onChange={handleChange}
-                      className="bg-transparent border-b-2 border-white text-center"
+                      className="bg-transparent border-b-2 border-white text-center w-full"
                     />
                   </div>
                 ) : (
-                  <a href={`https://${social}.com/${artist[social]}`} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                    {artist[social]}
+                  <a href={`${artist[social]}`} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-200">
+                    {social === 'instagram' && <FaInstagram className="text-3xl" />}
+                    {social === 'twitter' && <FaTwitter className="text-3xl" />}
+                    {social === 'facebook' && <FaFacebook className="text-3xl" />}
                   </a>
                 )}
               </div>

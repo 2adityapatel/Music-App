@@ -4,25 +4,17 @@ import { userContext } from './UserLayout';
 import { FaCalendarAlt, FaMusic, FaBell } from 'react-icons/fa';
 
 const UserPage = () => {
-  const { name, setName } = useContext(userContext);
-  const [userData, setUserData] = useState(null);
+  const { user, setUser } = useContext(userContext);
+ 
   const [error, setError] = useState(null);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [recommendedArtists, setRecommendedArtists] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem('token');
+    const fetchData = async () => {
+      
       try {
-        const response = await axios.get('http://localhost:8000/user', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // setName(response.data.user.fullName);
-        setUserData(response.data);
-
         // Fetch additional data (replace with actual API calls)
         setUpcomingEvents([
           { id: 1, artist: 'The Weeknd', date: '2024-08-25', time: '20:00', image: 'https://example.com/weeknd.jpg' },
@@ -40,15 +32,15 @@ const UserPage = () => {
         setError(error.response?.data?.message || 'An error occurred');
       }
     };
-
-    fetchUserData();
-  }, [setName]);
+    fetchData()
+   
+  }, []);
 
   if (error) {
     return <div className="p-6 text-red-500">{error}</div>;
   }
 
-  if (!userData) {
+  if (!user) {
     return <div className="p-6 text-white">Loading...</div>;
   }
 
@@ -56,8 +48,8 @@ const UserPage = () => {
     <div className="p-6 bg-neutral-800 text-white min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="bg-neutral-700 border-l-4 border-orange-600 rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold">Welcome, {name}</h1>
-          <p className="text-gray-300 mt-2">{userData.message}</p>
+          <h1 className="text-3xl font-bold">Welcome, {user.username}</h1>
+          
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

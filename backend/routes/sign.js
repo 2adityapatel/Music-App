@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/user");
 const UserProfile = require("../models/userprofile")
+const ArtistProfile = require("../models/artistprofile")
 
 const router = Router();
 
@@ -31,11 +32,18 @@ router.post("/signup", async (req, res) => {
       password,
       role
     });
-    const userProfile = await UserProfile.create({
-      email,
-      username:"",
-      profilePhoto:"Hello",
-    })
+
+    if (role === 'ARTIST'){
+      await ArtistProfile.create(
+               {email,username : "",profilePhoto:"Hello", genre : "", bio:"",followers:0, instagram:"", twitter:"", facebook:""}
+      )                                               
+    }else{
+       await UserProfile.create({
+        email,
+        username:"",
+        profilePhoto:"Hello",
+      })
+    }
     console.log(user);
     return res.status(201).send({ msg: "User created successfully", user });
   } catch (error) {

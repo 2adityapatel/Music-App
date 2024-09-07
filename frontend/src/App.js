@@ -28,7 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/user" element={<UserLayout/>} >
-            <Route path="" element={
+            <Route path="home" element={
               <ProtectedRoute requiredRole="USER">
                 <UserPage/>
               </ProtectedRoute>
@@ -40,7 +40,7 @@ function App() {
               }/>
           </Route>
           <Route path="/artist" element={<ArtistLayout/>} >
-            <Route path="" element={
+            <Route path="dashboard" element={
               <ProtectedRoute requiredRole="ARTIST">
                 <ArtistPage/>
               </ProtectedRoute>

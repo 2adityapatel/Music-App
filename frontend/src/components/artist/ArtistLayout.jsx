@@ -1,5 +1,6 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect,useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import axios from 'axios';
 import Header from '../Header';
 import ArtistSidebar from './ArtistSidebar';
 
@@ -7,11 +8,31 @@ const artistContext = createContext();
 
 function ArtistLayout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [artistData, setArtistData] = useState({});
-  const [artistName, setArtistName] = useState("Artist");
+  const [artist, setArtist] = useState({});
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('http://localhost:8000/artist', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        setArtist(response.data);
+        console.log(response.data);
+       
+      } catch (error) {
+        console.log(error.response?.data?.message || 'An error occurred');
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
-    <artistContext.Provider value={{ artistName, setArtistName, setArtistData }}>
+    <artistContext.Provider value={{ artist, setArtist }}>
       <div className="h-screen flex flex-col">
         {/* Navbar */}
         <div className="fixed top-0 left-0 w-full z-50">

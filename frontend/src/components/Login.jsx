@@ -8,7 +8,6 @@ const Login = () => {
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
-    // const [role,setRole] = useState('USER')
 
 
     const handleLogin = async (e) => {
@@ -24,12 +23,11 @@ const Login = () => {
                 console.log(response.data.msg);
                 localStorage.setItem('token', response.data.token);
                 const userRole = response.data.role; 
-                // setRole(userRole)
-                // console.log("Role : " +role);
+        
                 if(userRole === 'USER'){
-                    navigate('/user')
+                    navigate('/user/home')
                 }else{
-                    navigate('/artist')
+                    navigate('/artist/dashboard')
                 }
             
                 

@@ -6,13 +6,12 @@ import { artistContext } from './ArtistLayout';
 import { toast } from 'react-toastify';
 
 const ArtistSidebar = () => {
-  const { artistName, setArtistName, setArtistData } = useContext(artistContext);
+  const { artist, setArtist } = useContext(artistContext);
   const navigate = useNavigate();
 
   const handleLogOut = () => {
     localStorage.removeItem('token');
-    setArtistName('');
-    setArtistData({});
+    setArtist({});
     navigate('/login');
     toast.success('You have been logged out successfully');
   };
@@ -25,7 +24,7 @@ const ArtistSidebar = () => {
           alt="logo"
           className="h-10 w-10 rounded-full"
         />
-        <span className="text-2xl font-extrabold">{artistName}</span>
+        <span className="text-2xl font-extrabold">{artist.username}</span>
       </div>
 
       <nav>

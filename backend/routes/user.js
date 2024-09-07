@@ -4,11 +4,9 @@ const UserProfile = require('../models/userprofile');
 
 const router = Router();
 
-router.get('/', (req,res) => {
-    res.json({ message: 'Welcome to the user page!', user: req.user })
-})
 
-router.get('/profile',async (req,res)=>{
+
+router.get('/',async (req,res)=>{
     try {
         const email = req.user.email;
         const userData = await UserProfile.findOne({email});

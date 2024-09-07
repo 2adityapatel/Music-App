@@ -6,13 +6,13 @@ import { userContext } from './UserLayout';
 import { toast } from 'react-toastify';
 
 const UserSidebar = () => {
-  const { name, setName, setUserData } = useContext(userContext);
+  const {user, setUser } = useContext(userContext);
   const navigate = useNavigate();
 
   const handleLogOut = () => {
     localStorage.removeItem('token');
-    setName('');
-    setUserData({});
+   
+    setUser({});
     navigate('/login');
     toast.success('You have been logged out successfully');
   };
@@ -25,12 +25,12 @@ const UserSidebar = () => {
           alt="logo"
           className="h-10 w-10 rounded-full"
         />
-        <span className="text-2xl font-extrabold">Hii, {name}</span>
+        <span className="text-2xl font-extrabold">Hii, {user.username}</span>
       </div>
 
       <nav>
         <NavLink
-          to="/home"
+          to="/user/home"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >
@@ -46,7 +46,7 @@ const UserSidebar = () => {
           Profile
         </NavLink>
         <NavLink
-          to="/streams"
+          to="/user/streams"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >
@@ -54,7 +54,7 @@ const UserSidebar = () => {
           Streams
         </NavLink>
         <NavLink
-          to="/playlist"
+          to="/user/playlist"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >
@@ -62,7 +62,7 @@ const UserSidebar = () => {
           Playlist
         </NavLink>
         <NavLink
-          to="/liked-songs"
+          to="/user/liked-songs"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >
