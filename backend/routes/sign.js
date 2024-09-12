@@ -26,6 +26,7 @@ router.post("/signup", async (req, res) => {
   // const { fullName, email, password ,role} = req.body;
   const {  email, password ,role} = req.body;
   console.log(req.email );
+  const username = email.split("@")[0]
   try {
     const user = await User.create({
       email,
@@ -35,12 +36,12 @@ router.post("/signup", async (req, res) => {
 
     if (role === 'ARTIST'){
       await ArtistProfile.create(
-               {email,username : "",profilePhoto:"Hello", genre : "", bio:"",followers:0, instagram:"", twitter:"", facebook:""}
+               {email,username : username,profilePhoto:"Hello", genre : "", bio:"",followers:0, instagram:"", twitter:"", facebook:""}
       )                                               
     }else{
        await UserProfile.create({
         email,
-        username:"",
+        username: username,
         profilePhoto:"Hello",
       })
     }

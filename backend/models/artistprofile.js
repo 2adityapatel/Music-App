@@ -8,6 +8,7 @@ const artistSchema = new mongoose.Schema({
   },
   username: {
     type: String,
+    unique:true,
     trim: true
   },
   profilePicture: {
