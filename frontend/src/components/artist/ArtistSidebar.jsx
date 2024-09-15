@@ -37,7 +37,7 @@ const ArtistSidebar = () => {
           Dashboard
         </NavLink>
         <NavLink
-          to="/artist/albums"
+          to="/artist/songs"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >

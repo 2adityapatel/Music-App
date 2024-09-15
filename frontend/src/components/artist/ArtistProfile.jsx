@@ -37,16 +37,7 @@ const ArtistProfile = () => {
     try {
       const token = localStorage.getItem('token');
       const formData = new FormData();
-    //   Object.keys(artist).forEach(key => formData.append(key, artist[key]));
-
-    // formData.append('username', artist.username);
-    // formData.append('followers', artist.followers);
-    // formData.append('genre', artist.genre);
-    // formData.append('bio', artist.bio);
-    // formData.append('instagram', artist.instagram);
-    // formData.append('twitter', artist.twitter);
-    // formData.append('facebook', artist.facebook);
-
+   
     // Populate FormData with artist information
     Object.keys(artist).forEach(key => {
         if (key !== 'profilePhoto') {  // Skiping profilePhoto as it's handled separately

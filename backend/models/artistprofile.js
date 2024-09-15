@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 // Define the Artist schema
 const artistSchema = new mongoose.Schema({
   email : {

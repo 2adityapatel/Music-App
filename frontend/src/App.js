@@ -14,6 +14,8 @@ import UserLayout from "./components/User/UserLayout";
 import ArtistPage from "./components/artist/ArtistPage";
 import UserProfile from "./components/User/UserProfile";
 import ArtistProfile from "./components/artist/ArtistProfile";
+import AddSongPage from "./components/artist/AddSong";
+import AlbumPage from "./components/artist/AlbumPage";
 
 
 function App() {
@@ -48,6 +50,16 @@ function App() {
               <Route path="profile" element={
               <ProtectedRoute requiredRole="ARTIST">
                 <ArtistProfile/>
+              </ProtectedRoute>
+              }/>
+              <Route path="add-song" element={
+              <ProtectedRoute requiredRole="ARTIST">
+                <AddSongPage/>
+              </ProtectedRoute>
+              }/>
+              <Route path="songs" element={
+              <ProtectedRoute requiredRole="ARTIST">
+                <AlbumPage/>
               </ProtectedRoute>
               }/>
           </Route>
