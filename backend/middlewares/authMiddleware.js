@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const verifyTokenAndRole = (requiredRole) => {
   return (req, res, next) => {
+    console.log(req.headers);
+        
     const token = req.headers.authorization?.split(' ')[1];
     console.log("header" + token);
     if (!token) {

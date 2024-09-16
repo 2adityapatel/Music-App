@@ -9,24 +9,6 @@ const ArtistProfile = () => {
   const [newPhoto, setNewPhoto] = useState(null);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   fetchArtistData();
-  // }, []);
-
-  // const fetchArtistData = async () => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     const response = await axios.get('http://localhost:8000/artist/', {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     });
-  //     console.log("Initial UseEffect :");
-  //     console.log( response.data);
-  //     setArtistData(response.data);
-  //   } catch (error) {
-  //     setError(error.response?.data?.message || 'An error occurred while fetching artist data');
-  //   }
-  // };
-
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => {
     setIsEditing(false);

@@ -1,30 +1,36 @@
 const { Schema, model } = require("mongoose");
 
 const userProfile = new Schema(
-    {
-      email : {
-        type: String,
-      required: true, 
-      unique: true,   
-      trim: true  
-      } , 
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     username: {
       type: String,
-      unique: true,   
-      trim: true    
+      unique: true,
+      trim: true,
     },
     profilePhoto: {
-      type: String,   
-      required: false 
+      type: String,
+      required: false,
     },
     numberOfArtistsFollowed: {
-        type: Number,
-        default: 0      
-      }
-  }, 
+      type: Number,
+      default: 0,
+    },
+    likedSongs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Song",
+      },
+    ],
+  },
   { timestamps: true }
 );
-  
+
 const UserProfile = model("userprofile", userProfile);
 
 module.exports = UserProfile;

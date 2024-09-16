@@ -1,116 +1,157 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { FaHeart, FaPlus, FaUserPlus } from 'react-icons/fa';
 import { userContext } from './UserLayout';
-import { FaCalendarAlt, FaMusic, FaBell } from 'react-icons/fa';
 
 const UserPage = () => {
-  const { user, setUser } = useContext(userContext);
- 
-  const [error, setError] = useState(null);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [recommendedArtists, setRecommendedArtists] = useState([]);
-  const [recentActivity, setRecentActivity] = useState([]);
+  const {user} = useContext(userContext)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState({ songs: [], artists: [] });
+  const [likedSongs, setLikedSongs] = useState(user?.likedSongs || []);
+  const [followedArtists, setFollowedArtists] = useState([]);
+  const token = localStorage.getItem("token")
 
-  useEffect(() => {
-    const fetchData = async () => {
-      
+
+  useEffect(()=>{
+    setLikedSongs(user?.likedSongs || []);
+    console.log(likedSongs);
+    
+  },[user])
+
+  // Handle input change and fetch search suggestions
+  const handleSearchChange = async (e) => {
+
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.trim()) {
       try {
-        // Fetch additional data (replace with actual API calls)
-        setUpcomingEvents([
-          { id: 1, artist: 'The Weeknd', date: '2024-08-25', time: '20:00', image: 'https://example.com/weeknd.jpg' },
-          { id: 2, artist: 'Dua Lipa', date: '2024-08-27', time: '21:00', image: 'https://example.com/dualipa.jpg' },
-        ]);
-        setRecommendedArtists([
-          { id: 1, name: 'Billie Eilish', genre: 'Pop', image: 'https://example.com/billieeilish.jpg' },
-          { id: 2, name: 'Kendrick Lamar', genre: 'Hip Hop', image: 'https://example.com/kendricklamar.jpg' },
-        ]);
-        setRecentActivity([
-          { id: 1, type: 'New Song', artist: 'Taylor Swift', content: 'Released a new single "Midnight Rain"', image: 'https://example.com/taylorswift.jpg' },
-          { id: 2, type: 'Upcoming Event', artist: 'Ed Sheeran', content: 'Announced a new concert in New York', image: 'https://example.com/edsheeran.jpg' },
-        ]);
+        const response = await axios.get(`http://localhost:8000/user/search?q=${value}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+           
+          }
+        } );
+        setSearchResults(response.data);
       } catch (error) {
-        setError(error.response?.data?.message || 'An error occurred');
+        console.error('Error fetching search results:', error);
       }
-    };
-    fetchData()
-   
-  }, []);
+    } else {
+      setSearchResults({ songs: [], artists: [] });
+    }
+  };
 
-  if (error) {
-    return <div className="p-6 text-red-500">{error}</div>;
-  }
+  // Handle liking a song
+  const handleLikeSong = async (songId) => {
+    const userId = user._id
+    
+    if (likedSongs.includes(songId)) {
+      // If song is already liked, send DELETE request
+      try {
+        console.log(token);
+        
+        const responseDel = await axios.delete(`http://localhost:8000/user/${userId}/like-song/${songId}`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (responseDel.status === 200) {
+          setLikedSongs((prev) => prev.filter((id) => id !== songId)); // Remove from liked songs
+        } else {
+          window.alert('Error removing song from liked songs');
+        }
+      } catch (error) {
+        window.alert('Error removing song from liked songs');
+        console.error('Error removing song from liked songs', error);
+      }
+    } else {
+      // If song is not liked, send POST request
+      try {
+        
+        const responseAdd = await axios.post(`http://localhost:8000/user/${userId}/like-song/${songId}`,{},  {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } );
+        if (responseAdd.status === 200) {
+          setLikedSongs((prev) => [...prev, songId]); // Add to liked songs
+        } else {
+          window.alert('Error adding song to liked songs');
+        }
+      } catch (error) {
+        window.alert('Error adding song to liked songs');
+        console.error('Error adding song to liked songs', error);
+      }
+    }
+  };
 
-  if (!user) {
-    return <div className="p-6 text-white">Loading...</div>;
-  }
+  // Handle following an artist
+  const handleFollowArtist = (artistId) => {
+    setFollowedArtists((prev) =>
+      prev.includes(artistId) ? prev.filter(id => id !== artistId) : [...prev, artistId]
+    );
+  };
 
   return (
     <div className="p-6 bg-neutral-800 text-white min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <header className="bg-neutral-700 border-l-4 border-orange-600 rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold">Welcome, {user.username}</h1>
-          
+        <header className="bg-neutral-700 p-6 mb-6 rounded-lg">
+          <input
+            type="text"
+            placeholder="Search for songs or artists..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full p-2 rounded-md bg-neutral-600 text-white"
+          />
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-neutral-700 p-6 rounded-lg border-t-4 border-orange-600">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <FaCalendarAlt className="mr-2 text-orange-600" />
-              Upcoming Live Events
-            </h2>
-            <ul>
-              {upcomingEvents.map(event => (
-                <li key={event.id} className="mb-4 flex items-center">
-                  <img src={event.image} alt={event.artist} className="w-12 h-12 rounded-full mr-4" />
+        {/* Display search results for songs */}
+        <div className="mb-16">
+          <h2 className="text-xl font-semibold mb-4 border-b-2 border-orange-600 pb-2">Songs</h2>
+          <div className="space-y-4">
+            {searchResults.songs.map((song) => (
+              <div key={song._id} className="flex items-center justify-between bg-neutral-700 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <img src={song.coverImage} alt={song.title} className="border-2 border-white w-12 h-12 rounded-full mr-4" />
                   <div>
-                    <p className="font-medium">{event.artist}</p>
-                    <p className="text-sm text-gray-300">{event.date} at {event.time}</p>
+                    <p className="font-medium">{song.title}</p>
+                    <p className="text-sm text-gray-300">{song.artist?.name}</p>
                   </div>
-                  <button className="ml-auto bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 transition duration-300">
-                    Set Reminder
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    className={`p-2 rounded-full ${likedSongs.includes(song._id) ? 'text-red-600' : 'text-white'}`}
+                    onClick={() => handleLikeSong(song._id)}
+                  >
+                    <FaHeart />
                   </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="bg-neutral-700 p-6 rounded-lg border-t-4 border-orange-600">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <FaMusic className="mr-2 text-orange-600" />
-              Recommended Artists
-            </h2>
-            <ul>
-              {recommendedArtists.map(artist => (
-                <li key={artist.id} className="mb-4 flex items-center">
-                  <img src={artist.image} alt={artist.name} className="w-12 h-12 rounded-full mr-4" />
-                  <div>
-                    <p className="font-medium">{artist.name}</p>
-                    <p className="text-sm text-gray-300">{artist.genre}</p>
-                  </div>
-                  <button className="ml-auto bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 transition duration-300">
-                    Follow
+                  <button className="p-2 rounded-full text-white">
+                    <FaPlus />
                   </button>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div className="bg-neutral-700 p-6 rounded-lg border-t-4 border-orange-600 md:col-span-2 lg:col-span-1">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <FaBell className="mr-2 text-orange-600" />
-              Recent Activity
-            </h2>
-            <ul>
-              {recentActivity.map(activity => (
-                <li key={activity.id} className="mb-4 flex items-start">
-                  <img src={activity.image} alt={activity.artist} className="w-10 h-10 rounded-full mr-3" />
-                  <div>
-                    <p className="font-medium">{activity.artist}</p>
-                    <p className="text-sm text-gray-300">{activity.content}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+        {/* Display search results for artists */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 border-b-2 border-orange-600 pb-2 ">Artists</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {searchResults.artists.map((artist) => (
+              <div key={artist._id} className="bg-neutral-700 p-4 rounded-lg flex flex-col items-center">
+                <img src={artist.profilePicture} alt={artist.username} className="w-20 h-20 border-2 border-white rounded-full mb-4" />
+                <p className="font-medium">{artist.username}</p>
+                <button
+                  className={`mt-4 px-4 py-2 rounded-lg ${
+                    followedArtists.includes(artist._id) ? 'bg-orange-700' : 'bg-orange-600'
+                  }`}
+                  onClick={() => handleFollowArtist(artist._id)}
+                >
+                  {followedArtists.includes(artist._id) ? 'Following' : 'Follow'}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>

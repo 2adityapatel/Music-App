@@ -1,8 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-// import logo from "../assets/logo.png";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { navItems } from "../../constants";
-
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -16,26 +15,23 @@ const Navbar = () => {
       <div className="container px-4 mx-auto relative lg:text-sm">
         <div className="ml-6 flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
-            <img className="h-10 w-10 mr-2" src="https://w7.pngwing.com/pngs/208/848/png-transparent-musical-note-logo-clef-music-logo-design-other-text-musical-composition.png" alt="Logo" />
+            <img
+              className="h-10 w-10 mr-2"
+              src="https://w7.pngwing.com/pngs/208/848/png-transparent-musical-note-logo-clef-music-logo-design-other-text-musical-composition.png"
+              alt="Logo"
+            />
             <span className="text-xl tracking-tight">VirtualR</span>
           </div>
-          {/* <ul className="hidden lg:flex ml-14 space-x-12">
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
-          </ul> */}
           <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <a href="#" className="py-2 px-3 border rounded-md">
+            <Link to="/login" className="py-2 px-3 border rounded-md">
               Sign In
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/signup"
               className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md"
             >
               Create an account
-            </a>
+            </Link>
           </div>
           <div className="lg:hidden md:flex flex-col justify-end">
             <button onClick={toggleNavbar}>
@@ -48,20 +44,20 @@ const Navbar = () => {
             <ul>
               {navItems.map((item, index) => (
                 <li key={index} className="py-4">
-                  <a href={item.href}>{item.label}</a>
+                  <Link to={item.href}>{item.label}</Link>
                 </li>
               ))}
             </ul>
             <div className="flex space-x-6">
-              <a href="#" className="py-2 px-3 border rounded-md">
+              <Link to="/login" className="py-2 px-3 border rounded-md">
                 Sign In
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="/signup"
                 className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
               >
                 Create an account
-              </a>
+              </Link>
             </div>
           </div>
         )}
@@ -71,5 +67,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
