@@ -16,6 +16,7 @@ import UserProfile from "./components/User/UserProfile";
 import ArtistProfile from "./components/artist/ArtistProfile";
 import AddSongPage from "./components/artist/AddSong";
 import AlbumPage from "./components/artist/AlbumPage";
+import RecommendPage from "./components/User/RecommendPage";
 
 
 function App() {
@@ -33,6 +34,11 @@ function App() {
             <Route path="home" element={
               <ProtectedRoute requiredRole="USER">
                 <UserPage/>
+              </ProtectedRoute>
+              }/>
+              <Route path="recommend" element={
+              <ProtectedRoute requiredRole="USER">
+                <RecommendPage/>
               </ProtectedRoute>
               }/>
               <Route path="profile" element={

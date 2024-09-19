@@ -121,6 +121,69 @@ router.post('/:userId/like-song/:songId', async (req, res) => {
   }
 });
 
+// Follow an artist
+router.post('/:userId/follow-artist/:artistId', async (req, res) => {
+  const { userId, artistId } = req.params;
+  console.log(  { userId, artistId } );
+  
+  try {
+    const user = await UserProfile.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log(user);
+    
+
+    // Check if the artist is already followed
+    if (user.artistsFollowed.includes(artistId)) {
+      return res.status(400).json({ message: 'Artist is already followed' });
+    }
+
+    user.artistsFollowed.push(artistId);
+    user.numberOfArtistsFollowed += 1;
+    await user.save();
+
+    res.status(200).json({ message: 'Artist followed successfully' });
+  } catch (error) {
+    console.error('Error following the artist:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Unfollow an artist
+router.delete('/:userId/follow-artist/:artistId', async (req, res) => {
+  const { userId, artistId } = req.params;
+
+  try {
+    const user = await UserProfile.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the artist is followed
+    if (!user.artistsFollowed.includes(artistId)) {
+      return res.status(400).json({ message: 'Artist not found in followed artists' });
+    }
+
+    user.artistsFollowed = user.artistsFollowed.filter((id) => id.toString() !== artistId);
+    console.log(user);
+    
+    // Decrement the number of artists followed
+    if (user.numberOfArtistsFollowed > 0) {
+      user.numberOfArtistsFollowed -= 1;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: 'Artist unfollowed successfully' });
+  } catch (error) {
+    console.error('Error unfollowing the artist:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 
 module.exports = router

@@ -46,12 +46,12 @@ const UserSidebar = () => {
           Profile
         </NavLink>
         <NavLink
-          to="/user/streams"
+          to="/user/recommend"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
           activeClassName="bg-gray-700 text-white"
         >
           <FaStream className="inline-block mr-2" />
-          Streams
+          Recommend
         </NavLink>
         <NavLink
           to="/user/playlist"

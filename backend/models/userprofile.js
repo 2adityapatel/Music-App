@@ -27,7 +27,14 @@ const userProfile = new Schema(
         ref: "Song",
       },
     ],
-  },
+  
+  artistsFollowed : [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Artist",
+    },
+  ],
+},
   { timestamps: true }
 );
 

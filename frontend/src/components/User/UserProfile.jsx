@@ -10,6 +10,10 @@ const UserProfile = () => {
   const [newPhoto, setNewPhoto] = useState(null);
   const {user , setUser} = useContext(userContext)
 
+  useEffect(()=>{
+    setUser(user)
+    },[setUser])
+
   
   const handleEdit = () => {
     setIsEditing(true);
@@ -101,7 +105,7 @@ const UserProfile = () => {
         )}
         <div className="flex items-center mb-4">
           <FaUserFriends className="mr-2 text-orange-600" />
-          <span>{user.numFollowings} Following</span>
+          <span>{user.numberOfArtistsFollowed} Following</span>
         </div>
         {isEditing ? (
           <div>

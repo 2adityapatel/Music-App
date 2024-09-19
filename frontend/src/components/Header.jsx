@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import profile from '../assets/profile-pictures/default.png'
+import logo from "../assets/logo.png"
 
 function Header({ toggleSidebar }) {
 
@@ -24,7 +25,7 @@ function Header({ toggleSidebar }) {
           ></path>
         </svg>
       </button>
-      <div className="text-xl font-semibold">Logo</div>
+      <img src={logo} className="h-10 w-10 object-cover" />
       <div>
         <img
           src={profile}

@@ -8,12 +8,13 @@ const UserPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState({ songs: [], artists: [] });
   const [likedSongs, setLikedSongs] = useState(user?.likedSongs || []);
-  const [followedArtists, setFollowedArtists] = useState([]);
+  const [followedArtists, setFollowedArtists] = useState(user?.artistsFollowed || []);
   const token = localStorage.getItem("token")
 
 
   useEffect(()=>{
     setLikedSongs(user?.likedSongs || []);
+    setFollowedArtists(user?.artistsFollowed || []); 
     console.log(likedSongs);
     
   },[user])
@@ -86,11 +87,48 @@ const UserPage = () => {
   };
 
   // Handle following an artist
-  const handleFollowArtist = (artistId) => {
-    setFollowedArtists((prev) =>
-      prev.includes(artistId) ? prev.filter(id => id !== artistId) : [...prev, artistId]
-    );
-  };
+const handleFollowArtist = async (artistId) => {
+  const userId = user._id;
+  console.log(token);
+  
+
+  if (followedArtists.includes(artistId)) {
+    // If artist is already followed, send DELETE request
+    try {
+      const responseDel = await axios.delete(`http://localhost:8000/user/${userId}/follow-artist/${artistId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (responseDel.status === 200) {
+        setFollowedArtists((prev) => prev.filter((id) => id !== artistId)); // Remove from followed artists
+      } else {
+        window.alert('Error unfollowing artist');
+      }
+    } catch (error) {
+      window.alert('Error unfollowing artist');
+      console.error('Error unfollowing artist', error);
+    }
+  } else {
+    // If artist is not followed, send POST request
+    try {
+      const responseAdd = await axios.post(`http://localhost:8000/user/${userId}/follow-artist/${artistId}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (responseAdd.status === 200) {
+        setFollowedArtists((prev) => [...prev, artistId]); // Add to followed artists
+      } else {
+        window.alert('Error following artist');
+      }
+    } catch (error) {
+      window.alert('Error following artist');
+      console.error('Error following artist', error);
+    }
+  }
+};
+
 
   return (
     <div className="p-6 bg-neutral-800 text-white min-h-screen">
@@ -144,7 +182,7 @@ const UserPage = () => {
                 <p className="font-medium">{artist.username}</p>
                 <button
                   className={`mt-4 px-4 py-2 rounded-lg ${
-                    followedArtists.includes(artist._id) ? 'bg-orange-700' : 'bg-orange-600'
+                    followedArtists.includes(artist._id) ? 'bg-gray-500' : 'bg-orange-600'
                   }`}
                   onClick={() => handleFollowArtist(artist._id)}
                 >
