@@ -17,6 +17,7 @@ import ArtistProfile from "./components/artist/ArtistProfile";
 import AddSongPage from "./components/artist/AddSong";
 import AlbumPage from "./components/artist/AlbumPage";
 import RecommendPage from "./components/User/RecommendPage";
+import ArtistDashboard from "./components/artist/ArtistDashboard";
 
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
           <Route path="/artist" element={<ArtistLayout/>} >
             <Route path="dashboard" element={
               <ProtectedRoute requiredRole="ARTIST">
-                <ArtistPage/>
+                <ArtistDashboard/>
               </ProtectedRoute>
               }/>
               <Route path="profile" element={
